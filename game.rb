@@ -1,43 +1,31 @@
 # frozen_string_literal: true
 
 class Game
+  attr_reader :players
+
   def initialize(players)
-    @players = players
+    @players = []
   end
 
+
   def play
-    play
+    puts "Players in the #{game_type} game:"
+    @players.each { |player| puts "#{player.name}: #{player.send game_specific_message}" }
   end
 
   def results
-    "[pretend these are #{self.game_type} results]"
+    "[pretend these are #{game_type} results]"
   end
 end
 
 class Poker < Game
   def initialize(players)
     super
-    @hands = []
-    players.length.times { @hands.append(nil) }
+    players.each { |name| @players.append(Player.new(name, hand: nil)) }
   end
 
-  def play
-    puts 'Players in the poker game:'
-    @players.length.times { |i| puts "#{player_name(i)}: #{player_hand(i)}" }
-    # [pretend there's code here]
-  end
-
-  def player_name(index)
-    @players[index]
-  end
-
-  # @todo change to player class
-  def player_hand(index)
-    @hands[index]
-  end
-
-  def play_poker
-    # code here
+  def game_specific_message
+    'hand'
   end
 
   def game_type
@@ -46,38 +34,33 @@ class Poker < Game
 end
 
 class Chess < Game
-  def play_game
-    puts 'Players in the chess game:'
-    @players.length.times { |x| puts "#{player_name(x)}: #{@players[x][1]}" }
-    # [pretend there's code here]
+
+  def initialize(players)
+    super
+    players.each { |name, color| @players.append(Player.new(name, color: color)) }
   end
 
   def game_type
     'chess'
   end
 
-  def player_name(index)
-    @players[index][0]
+  def game_specific_message
+    # A string that is translated to a function call later from a Player object
+    'color'
   end
 end
 
-class GoGame
+class GoGame < Game
   def initialize(players)
-    @players = []
-    players.each { |x, y| @players.append(GoPlayer.new(x, y)) }
-  end
-
-  def play
-    puts 'Players in the go game:'
-    @players.each { |player| puts "#{player.name}: #{player.color}" }
-    # [pretend there's code here]
-  end
-
-  def score
-    '[pretend these are go results]'
+    super
+    players.each { |name, color| @players.append(Player.new(name, color: color)) }
   end
 
   def game_type
     'go'
+  end
+
+  def game_specific_message
+    'color'
   end
 end
